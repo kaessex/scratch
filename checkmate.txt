@@ -1,0 +1,67 @@
+Q1) Design a system from end to end ensuring maximum reuse and extendability. Along with peer reviewing of code and automated functional unit/end to end testing ensures quality.
+Q2) Ensure the use of UTC, provide tech support/backup 24/7, modular functionality along with robust error handling, deply modules geographically for speed, and account for old and new system compatibility at integration to avoid fatal errors in the migration.
+Q3) Fishtank class below
+    
+class Tank {
+    public FishTypes = {
+        'Gold_Fish':'Gold_Fish',
+        'Angel_Fish':'Angel_Fish',
+        'Babel_Fish':'Babel_Fish'
+    }
+    private FishProps = {
+        'Gold_Fish':{ foodAmount:0.1, foodUnit:'g'},
+        'Angel_Fish':{ foodAmount:0.2, foodUnit:'g'},
+        'Babel_Fish':{ foodAmount:0.3, foodUnit:'g'}
+    }
+    
+    private fishInTank:Array<{
+            name:string,
+            type:string
+        }>;
+    
+
+    constructor(){
+        for(let key in this.FishProps){
+            this.FishProps.toString = function(){ return key; }
+        }
+
+        this.fishInTank = [];
+        
+        return this;
+    }
+
+    public Feed(){
+        let count = 0;
+        for(let i=0;i<this.fishInTank.length; i++){
+            let fish = this.fishInTank[i];
+            count += this.FishProps[fish.type].foodAmount;
+        }
+
+        count = Math.round(count * 1000) / 1000;
+        return count;
+    }
+
+    public GetState(){
+        return { tank: JSON.parse(JSON.stringify(this.fishInTank)) }
+    }
+
+    public NewFish(name:string, type:string|number):null|Error{
+        let newFish = {
+            name:'',
+            type:''
+        }
+        if(typeof(name)=='string' && name.length>0){
+            newFish.name = name;
+        } else {
+            return new Error('fish name not provided');
+        }
+        if(typeof(type)=='string' && this.FishProps[type] != undefined){
+            newFish.type = type;
+        } else {
+            return new Error('fish type not provided');
+        }
+
+        this.fishInTank.push(newFish);
+        return null
+    }
+}
